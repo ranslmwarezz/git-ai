@@ -1,7 +1,6 @@
 package commit
 
 import (
-	"fmt"
 	"git-ai/internal/git"
 )
 
@@ -15,18 +14,11 @@ func NewService(gitClient git.GitClient) *Service {
 	}
 }
 
-func (s *Service) Run() error {
+func (s *Service) Run() (string, error) {
 	diff, err := s.git.DiffCached()
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	if diff == "" {
-		fmt.Println("Nenhuma alteração encontrada no staging.")
-		fmt.Println("Execute: git add <arquivo>")
-		return nil
-	}
-
-	fmt.Println(diff)
-	return nil
+	return diff, nil
 }
