@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"git-ai/internal/commit"
+	"git-ai/internal/git"
 	"os"
 )
 
@@ -18,9 +20,18 @@ func main() {
 
 	switch command {
 	case "commit":
-		fmt.Println("Comando commit executado!")
-	default: 
+		gitClient := &git.Client{}
+		commitService := commit.NewService(gitClient)
+
+		err := commitService.Run()
+
+		if err != nil {
+			fmt.Println("Erro: ", err)
+			return
+		}
+
+	default:
 		fmt.Printf("Comando desconhecido: %s\n", command)
-		
+
 	}
 }
