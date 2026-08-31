@@ -47,9 +47,19 @@ func NewAPIClient(baseURL, apiKey string) *APIClient {
 var _ AIClient = (*APIClient)(nil)
 
 func (c *APIClient) GenerateCommitMessage(diff string) (string, error) {
+	prompt := fmt.Sprintf(`Analise o diff abaixo e gere uma única mensagem de commit seguindo Conventional Commits.
+
+Regras:
+- Retorne somente a mensagem de commit.
+- Não explique a resposta.
+- Não use markdown.
+- Não use aspas.
+- A mensagem deve ser curta e objetiva.
+
+Diff: %s`, diff)
 	body := requestBody{
 		Model: "gemini-3.6-flash",
-		Input: diff,
+		Input: prompt,
 	}
 
 	jsonBody, err := json.Marshal(body)
@@ -93,7 +103,7 @@ func (c *APIClient) GenerateCommitMessage(diff string) (string, error) {
 		var apiError errorResponse
 
 		if err := json.Unmarshal(respBody, &apiError); err != nil {
-			return "", fmt.Errorf("API returnou status: %d", resp.StatusCode)
+			return "", fmt.Errorf("API returnou status: %d resposta inválida", resp.StatusCode)
 		}
 		return "", fmt.Errorf(
 			"API retornou status %d: %s",

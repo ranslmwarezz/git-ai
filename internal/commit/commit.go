@@ -7,13 +7,13 @@ import (
 
 type Service struct {
 	git git.GitClient
-	ai  ai.AIClient
+	ai ai.AIClient
 }
 
 func NewService(gitClient git.GitClient, aiClient ai.AIClient) *Service {
 	return &Service{
 		git: gitClient,
-		ai:  aiClient,
+		ai: aiClient,
 	}
 }
 

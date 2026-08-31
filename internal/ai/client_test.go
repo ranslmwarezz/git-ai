@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -32,6 +33,10 @@ func TestGeneratedCommitMessage(t *testing.T) {
 			t.Errorf("erro ao ler body: %v", err)
 		}
 
+		if !strings.Contains(string(body), "Retorne somente a mensagem de commit") {
+			t.Fatal("prompt não contém a mensagem esperada")
+		}
+
 		var request requestBody
 
 		err = json.Unmarshal(body, &request)
@@ -43,8 +48,8 @@ func TestGeneratedCommitMessage(t *testing.T) {
 			t.Errorf("modelo esperado gemini-3.6-flash, obtido: %s", request.Model)
 		}
 
-		if request.Input != "diff de teste" {
-			t.Errorf("input esperado %q, obtido %q", "diff de teste", request.Input)
+		if !strings.Contains(request.Input, "diff de teste") {
+			t.Fatal("input não contém o diff esperado")
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -55,7 +60,7 @@ func TestGeneratedCommitMessage(t *testing.T) {
 		"type": "model_output",
 		"content": [
 		{ "type": "text",
-		 "text": "feat: adiciona autenticação"
+		 "text": "feat: adiciona autenticação JWT"
 		}] 
 		}
 		]
@@ -73,7 +78,7 @@ func TestGeneratedCommitMessage(t *testing.T) {
 		t.Fatalf("erro inesperado: %v", err)
 	}
 
-	expected := "feat: adiciona autenticação"
+	expected := "feat: adiciona autenticação JWT"
 
 	if result != expected {
 		t.Fatalf("esperado %q, obtido: %q", expected, result)
