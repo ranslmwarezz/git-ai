@@ -1,0 +1,25 @@
+# Variáveis de ambiente
+.env
+.env.*
+
+# Binários compilados
+/git-ai
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Arquivos de teste/desenvolvimento local
+anotações.md
+arquivo_teste.go
+
+# Diretórios de ferramentas/IDE
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
