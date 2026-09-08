@@ -8,10 +8,16 @@ import (
 type fakeGit struct {
 	diff string
 	err  error
+	commitMessage  string
 }
 
 func (f *fakeGit) DiffCached() (string, error) {
 	return f.diff, f.err
+}
+
+func (f *fakeGit) Commit(message string) error {
+	f.commitMessage = message
+	return f.err
 }
 
 type fakeAI struct {
@@ -26,27 +32,31 @@ func (a *fakeAI) GenerateCommitMessage(diff string) (string, error) {
 }
 
 func TestRunReturnsCommitMessage(t *testing.T) {
-	fakeGit := &fakeGit{
-		diff: "diff de teste",
-	}
+    fakeGit := &fakeGit{
+        diff: "diff de teste",
+    }
 
-	expectedMessage := "feat: adiciona teste"
+    expectedMessage := "feat: adiciona teste"
 
-	fakeAi := &fakeAI{
-		message: expectedMessage,
-	}
+    fakeAi := &fakeAI{
+        message: expectedMessage,
+    }
 
-	service := NewService(fakeGit, fakeAi)
+    service := NewService(fakeGit, fakeAi)
 
-	message, err := service.Run()
+    message, err := service.Run()
 
-	if err != nil {
-		t.Fatalf("erro inesperado: %v", err)
-	}
+    if err != nil {
+        t.Fatalf("erro inesperado: %v", err)
+    }
 
-	if message != expectedMessage {
-		t.Fatalf("messagem esperada %q, obitida: %q", expectedMessage, message)
-	}
+    if message != expectedMessage {
+        t.Fatalf("mensagem esperada %q, obtida: %q", expectedMessage, message)
+    }
+
+    if !fakeAi.called {
+        t.Errorf("a IA deveria ter sido chamada")
+    }
 }
 
 func TestReturnsError(t *testing.T) {
