@@ -55,6 +55,7 @@ Regras:
 - Não use markdown.
 - Não use aspas.
 - A mensagem deve ser curta e objetiva.
+- A mensagem deve estar em português.
 
 Diff: %s`, diff)
 	body := requestBody{
