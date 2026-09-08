@@ -46,7 +46,7 @@ func (m Model) View() string {
 	if m.quitting {
 		return ""
 	}
-	return fmt.Sprintf("Git-AI\n\n"+"Messagem sugerida:\n\n"+" %s\n\n"+"Enter → confirmar\n"+"Esc → cancelar\n", m.message)
+	return fmt.Sprintf("Git-AI\n\n"+"Menssagem sugerida:\n\n"+" %s\n\n"+"Enter → confirmar\n"+"Esc → cancelar\n", m.message)
 }
 
 func (m Model) Confirmed() bool {
