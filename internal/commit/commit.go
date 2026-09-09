@@ -1,19 +1,19 @@
 package commit
 
 import (
-	"git-ai/internal/ai"
-	"git-ai/internal/git"
+	"github.com/ranslmwarezz/git-ai/internal/ai"
+	"github.com/ranslmwarezz/git-ai/internal/git"
 )
 
 type Service struct {
 	git git.GitClient
-	ai ai.AIClient
+	ai  ai.AIClient
 }
 
 func NewService(gitClient git.GitClient, aiClient ai.AIClient) *Service {
 	return &Service{
 		git: gitClient,
-		ai: aiClient,
+		ai:  aiClient,
 	}
 }
 

@@ -2,7 +2,8 @@ package tui
 
 import (
 	"fmt"
-	"git-ai/internal/git"
+
+	"github.com/ranslmwarezz/git-ai/internal/git"
 
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"

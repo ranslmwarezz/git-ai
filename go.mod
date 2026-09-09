@@ -1,4 +1,4 @@
-module git-ai
+module github.com/ranslmwarezz/git-ai
 
 go 1.26.1
 
