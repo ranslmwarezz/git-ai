@@ -19,6 +19,10 @@ func TestHelperProcess(t *testing.T) {
 	case "error":
 		os.Exit(1)
 
+	case "push":
+		_, _ = os.Stdout.WriteString("push realizado\n")
+		os.Exit(0)
+
 	default:
 		os.Exit(1)
 	}
@@ -136,6 +140,36 @@ func TestClient_Commit_Error(t *testing.T) {
 	err := client.Commit("feat: teste")
 
 	if err == nil {
+		t.Fatal("esperava um erro, mas nenhum erro ocorreu")
+	}
+}
+
+func TestClient_Push(t *testing.T) {
+	client := &Client{
+		command: func(name string, args ...string) *exec.Cmd {
+			if name != "git" {
+				t.Fatalf("esperava comando git, mas obteve %q", name)
+			}
+			if len(args) != 1 || args[0] != "push" {
+				t.Fatalf("argumentos inesperados: %v", args)
+			}
+			return helperCommand("push")
+		},
+	}
+
+	if err := client.Push(); err != nil {
+		t.Fatalf("esperava nenhum erro, mas obteve: %v", err)
+	}
+}
+
+func TestClient_Push_Error(t *testing.T) {
+	client := &Client{
+		command: func(name string, args ...string) *exec.Cmd {
+			return helperCommand("error")
+		},
+	}
+
+	if err := client.Push(); err == nil {
 		t.Fatal("esperava um erro, mas nenhum erro ocorreu")
 	}
 }

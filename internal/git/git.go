@@ -6,7 +6,8 @@ import (
 
 type GitClient interface {
 	DiffCached() (string, error)
-	Commit(m string) (error)
+	Commit(message string) error
+	Push() error
 }
 
 type CommandFunc func(string, ...string) *exec.Cmd
@@ -16,8 +17,7 @@ type Client struct {
 }
 
 func NewClient() *Client {
-	return &Client{command: exec.Command,
-	}
+	return &Client{command: exec.Command}
 }
 
 func (c *Client) DiffCached() (string, error) {
@@ -34,6 +34,12 @@ func (c *Client) DiffCached() (string, error) {
 func (c *Client) Commit(message string) error {
 
 	cmd := c.command("git", "commit", "-m", message)
+
+	return cmd.Run()
+}
+
+func (c *Client) Push() error {
+	cmd := c.command("git", "push")
 
 	return cmd.Run()
 }
