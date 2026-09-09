@@ -285,13 +285,4 @@ O projeto possui testes para os principais componentes, incluindo cliente Git, s
 
 ## Licença
 
-Este projeto ainda não possui um arquivo de licença no repositório.
-
----
-
-## Contato
-
-**Renan Felipe Barbosa Matos**
-
-* GitHub: [@ranslmwarezz](https://github.com/ranslmwarezz)
-* Projeto: [git-ai](https://github.com/ranslmwarezz/git-ai)
+Este projeto é distribuído sob a licença **MIT**. Consulte o arquivo [`LICENSE`](LICENSE) para mais informações.
