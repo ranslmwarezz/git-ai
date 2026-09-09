@@ -139,6 +139,14 @@ Para configurar a API Key globalmente, independente do repositório atual:
 git-ai config
 ```
 
+A configuração global é salva em `~/.config/git-ai/config` com permissões restritas ao usuário.
+
+Ao procurar a API Key, o Git-AI utiliza esta ordem de prioridade:
+
+1. Variável de ambiente `GEMINI_API_KEY`.
+2. Arquivo `.env` do diretório atual.
+3. Configuração global criada por `git-ai config`.
+
 A chave é utilizada para autenticar as requisições realizadas à API do Google Gemini.
 
 ---
@@ -168,7 +176,7 @@ git-ai
 Ou, executando diretamente a partir do código-fonte:
 
 ```bash
-git-ai
+go run ./cmd/git-ai
 ```
 
 ### 3. Revise a mensagem sugerida
@@ -279,11 +287,11 @@ O projeto possui testes para os principais componentes, incluindo cliente Git, s
 
 ## Solução de problemas
 
-| Problema                        | Possível causa                                                 | Solução                                                                                            |
-| ------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `GEMINI_API_KEY não encontrada` | Arquivo `.env` ausente ou variável de ambiente não configurada | Verifique se o `.env` está na raiz do projeto ou configure a variável `GEMINI_API_KEY` manualmente |
-| Erro de autenticação na API     | API Key inválida ou sem permissão                              | Gere ou configure uma nova chave no [Google AI Studio](https://aistudio.google.com/app/apikey)     |
-| Nenhuma alteração em staging    | Nenhum arquivo foi adicionado ao staging                       | Execute `git add .` antes de executar o Git-AI                                                     |
+| Problema                         | Possível causa                                              | Solução                                                                                        |
+| -------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `GEMINI_API_KEY não configurada` | Variável de ambiente, `.env` e configuração global ausentes | Execute `git-ai config` ou configure `GEMINI_API_KEY` manualmente                              |
+| Erro de autenticação na API      | API Key inválida ou sem permissão                           | Gere ou configure uma nova chave no [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| Nenhuma alteração em staging     | Nenhum arquivo foi adicionado ao staging                    | Execute `git add .` antes de executar o Git-AI                                                 |
 
 <!-- TODO: ajuste essa tabela conforme os erros reais que o Git-AI trata/loga -->
 
