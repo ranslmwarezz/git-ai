@@ -55,28 +55,15 @@ func main() {
 			return
 		}
 
-		model := tui.NewModel(message)
+		model := tui.NewModel(message, gitClient)
 
 		program := tea.NewProgram(model)
 
-		finalModel, err := program.Run()
+		_, err = program.Run()
 		if err != nil {
 			fmt.Println("Erro ao inicar TUI:", err)
 			return
 		}
-
-		final := finalModel.(tui.Model)
-
-		if !final.Confirmed() {
-			fmt.Println("Commit cancelado.")
-			return
-		}
-
-		if err := gitClient.Commit(message); err != nil {
-			fmt.Println("Erro ao executar commit:", err)
-			return
-		}
-		fmt.Println("Commit realizado.")
 
 	default:
 		fmt.Printf("Comando desconhecido: %s\n", command)
