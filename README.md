@@ -5,43 +5,35 @@
 </p>
 
 <p align="center">
-  Gere mensagens de commit seguindo o padrão Conventional Commits a partir das alterações realizadas no código.
+  Gere, revise e execute commits seguindo o padrão Conventional Commits diretamente pelo terminal.
 </p>
 
 <p align="center">
   <a href="https://go.dev/">
-    <img src="https://img.shields.io/badge/Go-1.26-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go">
+    <img src="https://img.shields.io/badge/Go-1.26.1-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go">
   </a>
   <a href="https://ai.google.dev/">
     <img src="https://img.shields.io/badge/Google%20Gemini-API-8E75B2?style=for-the-badge&logo=google" alt="Google Gemini">
   </a>
-  <a href="https://github.com/ranslmwarezz/git-ai/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/ranslmwarezz/git-ai?style=for-the-badge" alt="License">
+  <a href="https://github.com/charmbracelet/bubbletea">
+    <img src="https://img.shields.io/badge/Bubble%20Tea-TUI-00ADD8?style=for-the-badge" alt="Bubble Tea">
   </a>
   <a href="https://github.com/ranslmwarezz/git-ai">
     <img src="https://img.shields.io/github/last-commit/ranslmwarezz/git-ai?style=for-the-badge" alt="Last Commit">
   </a>
-  <!-- TODO: se tiver GitHub Actions rodando `go test`, adicione a badge de build aqui -->
 </p>
 
 ---
 
 ## Sobre o projeto
 
-O **Git-AI** é uma ferramenta de linha de comando desenvolvida em **Go** para gerar mensagens de commit automaticamente a partir das alterações adicionadas ao Git.
+O **Git-AI** é uma ferramenta de linha de comando desenvolvida em **Go** para auxiliar na criação de commits seguindo o padrão **Conventional Commits**.
 
-O projeto utiliza a **API do Google Gemini** para analisar o `git diff --cached` e gerar uma mensagem seguindo o padrão **Conventional Commits**.
+A ferramenta analisa as alterações adicionadas ao staging através do `git diff --cached`, envia o diff para a **API do Google Gemini** e gera uma mensagem de commit em português.
 
-A ideia é tornar o processo de criação de commits mais simples, mantendo mensagens claras, descritivas e padronizadas.
+Depois de gerar a mensagem, uma TUI interativa permite que o usuário revise o resultado, edite a mensagem, realize o commit e, opcionalmente, faça o push para o repositório remoto.
 
-<!--
-  TODO: explique aqui o fluxo real — isso é a primeira dúvida de quem for testar:
-  - O Git-AI comita automaticamente com a mensagem gerada?
-  - Ou ele abre uma interface (Bubble Tea) pra você revisar, editar e aprovar antes do commit?
-  Exemplo de frase pra usar:
-  "Ao rodar o Git-AI, uma interface interativa no terminal exibe a mensagem sugerida,
-  permitindo editar, regenerar ou confirmar antes do commit ser criado."
--->
+A proposta é combinar **Inteligência Artificial + Git + uma interface interativa no terminal** para tornar a criação de commits mais simples, rápida e padronizada.
 
 ### Desenvolvido com
 
@@ -49,7 +41,55 @@ A ideia é tornar o processo de criação de commits mais simples, mantendo mens
 * [Google Gemini API](https://ai.google.dev/)
 * [Git](https://git-scm.com/)
 * [Bubble Tea](https://github.com/charmbracelet/bubbletea)
+* [Bubbles](https://github.com/charmbracelet/bubbles)
+* [Lip Gloss](https://github.com/charmbracelet/lipgloss)
 * [Godotenv](https://github.com/joho/godotenv)
+
+---
+
+## Como funciona
+
+O fluxo principal do Git-AI é:
+
+```text
+Alterações no projeto
+        │
+        ▼
+    git add
+        │
+        ▼
+ git-ai commit
+        │
+        ▼
+ git diff --cached
+        │
+        ▼
+  Google Gemini
+        │
+        ▼
+Mensagem sugerida
+        │
+        ▼
+┌───────────────────────┐
+│ Realizar commit       │
+│ Editar mensagem       │
+│ Cancelar              │
+└───────────────────────┘
+        │
+        ▼
+   git commit
+        │
+        ▼
+┌───────────────────────┐
+│ Fazer push            │
+│ Sair                  │
+└───────────────────────┘
+        │
+        ▼
+     git push
+```
+
+O commit e o push **nunca são executados automaticamente**. O usuário precisa confirmar cada operação.
 
 ---
 
@@ -61,75 +101,114 @@ Para executar o projeto localmente, siga os passos abaixo.
 
 Certifique-se de possuir:
 
-* Go 1.26 ou superior
+* Go 1.26.1 ou superior
 * Git
 * Uma API Key do Google Gemini ([obtenha aqui](https://aistudio.google.com/app/apikey))
 
 ### Instalação
 
-**Opção 1 — via `go install` (recomendado)**
+**Opção 1 — via `go install`**
 
 ```bash
 go install github.com/ranslmwarezz/git-ai@latest
 ```
 
-Isso instala o binário `git-ai` em `$GOPATH/bin` (ou `$HOME/go/bin`). Certifique-se de que esse diretório está no seu `PATH`.
+Isso instala o binário `git-ai` no diretório de binários do Go. Certifique-se de que esse diretório esteja no seu `PATH`.
 
 **Opção 2 — a partir do código-fonte**
 
 ```bash
 git clone https://github.com/ranslmwarezz/git-ai.git
 cd git-ai
-go run ./cmd/git-ai
+go run ./cmd/git-ai commit
 ```
 
-> `go run` já resolve as dependências automaticamente — não é necessário rodar `go mod download` antes.
+> `go run` resolve as dependências automaticamente — não é necessário executar `go mod download` antes.
 
 ### Configuração
 
-Crie um arquivo `.env` na raiz do projeto (ou exporte a variável no seu shell):
+Crie um arquivo `.env` na raiz do projeto ou configure a variável de ambiente diretamente:
 
 ```env
 GEMINI_API_KEY=sua_api_key_aqui
 ```
 
-<!-- TODO: se houver outras variáveis configuráveis (modelo do Gemini, idioma da mensagem, etc), documente aqui. Exemplo:
-GEMINI_MODEL=gemini-2.0-flash
-COMMIT_LANGUAGE=pt-BR
--->
+A chave é utilizada para autenticar as requisições realizadas à API do Google Gemini.
 
 ---
 
 ## Utilização
 
-1. Adicione as alterações que deseja incluir no commit:
+### 1. Adicione as alterações ao staging
 
 ```bash
 git add .
 ```
 
-2. Execute o Git-AI:
+Você também pode adicionar arquivos específicos:
 
 ```bash
-git-ai
+git add arquivo.go
 ```
 
-<!-- Se ainda não tiver o binário instalado via `go install`, use: go run ./cmd/git-ai -->
+### 2. Execute o Git-AI
 
-3. O Git-AI analisa as alterações em staging, envia o diff para o Google Gemini e exibe a mensagem sugerida no terminal.
+Se o binário estiver instalado:
 
-<!--
-  TODO: descreva aqui o que acontece a partir daqui. Por exemplo:
-  - Teclas de atalho pra aceitar/editar/regenerar
-  - Se o commit é criado automaticamente ao aceitar
-  - Um GIF ou screenshot da interface ajuda MUITO mais que texto nessa parte
--->
+```bash
+git-ai commit
+```
 
-Exemplo de mensagem gerada:
+Ou, executando diretamente a partir do código-fonte:
+
+```bash
+go run ./cmd/git-ai commit
+```
+
+### 3. Revise a mensagem sugerida
+
+O Git-AI apresenta uma interface interativa no terminal com a mensagem gerada pela IA.
+
+Você pode escolher entre:
 
 ```text
-feat: adiciona integração com API do Gemini
+❯ Realizar commit
+  Editar mensagem
+  Cancelar
 ```
+
+### 4. Edite a mensagem, se necessário
+
+A opção **Editar mensagem** permite alterar a sugestão gerada pelo Gemini antes de criar o commit.
+
+Pressione:
+
+```text
+Enter → salvar a edição
+Esc   → cancelar a edição
+```
+
+### 5. Realize o commit
+
+Ao escolher **Realizar commit**, o Git-AI executa:
+
+```bash
+git commit -m "mensagem"
+```
+
+A operação só acontece após a confirmação do usuário.
+
+### 6. Faça push, se desejar
+
+Após um commit realizado com sucesso, o Git-AI oferece a opção de fazer push.
+
+O push também exige uma confirmação explícita antes de executar:
+
+```bash
+git push
+```
+
+O Git-AI não executa `git push` automaticamente.
 
 ---
 
@@ -137,7 +216,7 @@ feat: adiciona integração com API do Gemini
 
 As mensagens geradas pelo Git-AI seguem o padrão **Conventional Commits**.
 
-Alguns exemplos:
+Alguns tipos comuns:
 
 ```text
 feat: adiciona autenticação de usuários
@@ -149,41 +228,70 @@ test: adiciona testes para o cliente Gemini
 refactor: simplifica tratamento de erros
 
 docs: atualiza documentação do projeto
+
+chore: atualiza dependências
 ```
+
+A mensagem gerada é curta, objetiva e escrita em português.
+
+---
+
+## Interface
+
+A interface do Git-AI utiliza **Bubble Tea** e **Lip Gloss** para fornecer uma experiência interativa diretamente no terminal.
+
+Principais atalhos:
+
+| Tecla | Ação |
+| --- | --- |
+| `↑` / `↓` | Navegar entre opções |
+| `Enter` | Selecionar / confirmar |
+| `Esc` | Cancelar / voltar |
+| `q` | Sair |
+
+Durante a edição da mensagem, `Enter` salva a alteração e `Esc` cancela a edição.
 
 ---
 
 ## Testes
 
-Para executar os testes automatizados:
+Para executar todos os testes automatizados:
 
 ```bash
 go test ./...
 ```
 
-Para executar os testes exibindo os detalhes:
+Para executar os testes com detalhes:
 
 ```bash
 go test ./... -v
 ```
 
+O projeto possui testes para os principais componentes, incluindo cliente Git, serviço de commit, cliente da API Gemini e TUI.
+
 ---
 
 ## Solução de problemas
 
-
-| Problema                        | Possível causa                                                 | Solução                                                                                            |
-| ------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `GEMINI_API_KEY não encontrada` | Arquivo `.env` ausente ou variável de ambiente não configurada | Verifique se o `.env` está na raiz do projeto ou configure a variável `GEMINI_API_KEY` manualmente |
-| Erro de autenticação na API     | API Key inválida ou sem permissão                              | Gere ou configure uma nova chave no [Google AI Studio](https://aistudio.google.com/app/apikey)     |
-| Nenhuma alteração em staging  | Nenhum arquivo foi adicionado ao staging                       | Execute `git add .` antes de executar o Git-AI                                                     |
-
-
-
-<!-- TODO: ajuste essa tabela conforme os erros reais que o Git-AI trata/loga -->
+| Problema | Possível causa | Solução |
+| --- | --- | --- |
+| `GEMINI_API_KEY não configurada` | Variável de ambiente ausente | Crie um `.env` na raiz ou configure `GEMINI_API_KEY` no ambiente |
+| Erro de autenticação na API | API Key inválida ou sem permissão | Gere ou configure uma nova chave no [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| `Nenhuma alteração encontrada no staging` | Não existem alterações adicionadas ao staging | Execute `git add <arquivo>` ou `git add .` |
+| Falha ao realizar commit | O Git recusou o commit | Verifique a mensagem exibida pelo Git e o estado do repositório |
+| Falha ao realizar push | Problema com o repositório remoto ou autenticação | Verifique o remote e suas credenciais do Git |
 
 ---
 
 ## Licença
 
-Distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais informações.
+Este projeto ainda não possui um arquivo de licença no repositório.
+
+---
+
+## Contato
+
+**Renan Felipe Barbosa Matos**
+
+* GitHub: [@ranslmwarezz](https://github.com/ranslmwarezz)
+* Projeto: [git-ai](https://github.com/ranslmwarezz/git-ai)
