@@ -55,16 +55,16 @@ O fluxo principal do Git-AI é:
 Alterações no projeto
   │
   ▼
-    git add
+git add
   │
   ▼
-    git-ai
+git-ai
   │
   ▼
- git diff --cached
+git diff --cached
   │
   ▼
-  Google Gemini
+Google Gemini
   │
   ▼
 Mensagem sugerida
@@ -77,7 +77,7 @@ Mensagem sugerida
 └───────────────────────┘
   │
   ▼
-   git commit
+git commit
   │
   ▼
 ┌───────────────────────┐
@@ -86,7 +86,7 @@ Mensagem sugerida
 └───────────────────────┘
   │
   ▼
-     git push
+git push
 ```
 
 O commit e o push nunca são executados automaticamente. O usuário precisa confirmar cada operação.
